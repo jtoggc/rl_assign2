@@ -38,7 +38,7 @@ class Env(object):
         """
         raise NotImplementedError()
 
-    def step(self,action:int) -> Tuple(int, int, bool):
+    def step(self,action:int) -> tuple((int, int, bool)):
         """
         proceed one step.
         return:
