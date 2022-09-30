@@ -53,6 +53,29 @@ def value_prediction(env:EnvWithModel, pi:Policy, initV:np.array, theta:float) -
         if delta < theta:
             terminated = True
 
+
+    # action value prediction for Q_pi(s,a)
+    terminated = False
+    while not terminated:
+        delta = 0.0
+        for state in range(env.spec.nS):
+            for action in range(env.spec.nA):
+                val = 0
+                curr_q = Q[state, action]
+                possible_next_states_prob = env.TD[state, action, :]
+                for next_state, prob in enumerate(possible_next_states_prob):
+                    action_vals = 0
+                    for action_prime in range(env.spec.nA):
+                        action_vals += pi.action_prob(next_state, action_prime)*Q[next_state, action_prime]
+                    val += pi.action_prob(state, action)*prob*(env.R[state, action, next_state] + env.spec.gamma*action_vals)
+
+                Q[state,action] = val
+                delta = max(delta, abs(curr_q - val))
+            #print(delta)
+            #print(delta)
+        if delta < theta:
+            terminated = True
+
     return V, Q
 
 def value_iteration(env:EnvWithModel, initV:np.array, theta:float) -> Tuple[np.array,Policy]:
