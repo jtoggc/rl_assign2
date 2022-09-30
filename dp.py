@@ -67,7 +67,7 @@ def value_prediction(env:EnvWithModel, pi:Policy, initV:np.array, theta:float) -
                     action_vals = 0
                     for action_prime in range(env.spec.nA):
                         action_vals += pi.action_prob(next_state, action_prime)*Q[next_state, action_prime]
-                    val += pi.action_prob(state, action)*prob*(env.R[state, action, next_state] + env.spec.gamma*action_vals)
+                    val += prob*(env.R[state, action, next_state] + env.spec.gamma*action_vals)
 
                 Q[state,action] = val
                 delta = max(delta, abs(curr_q - val))
